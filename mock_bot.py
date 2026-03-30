@@ -1,0 +1,52 @@
+from flask import Flask, send_file, request
+from gtts import gTTS
+import time
+import os
+
+app = Flask(__name__)
+
+@app.route('/chat', methods=['POST'])
+def chat():
+    # 1. Obtenemos el archivo de audio enviado por Pytest
+    audio_file = request.files.get('audio')
+    nombre_archivo = audio_file.filename.lower() if audio_file else ""
+    
+    # 2. Por defecto es éxito, a menos que el nombre del archivo diga lo contrario
+    escenario = request.form.get('escenario', 'exito')
+    
+    # 🛡️ LÓGICA DE SEGURIDAD: Detectamos si es un intento de hackeo
+    if "ataque" in nombre_archivo:
+        print(f"\n🚨 [BOT] ¡ALERTA! Intento de Prompt Injection detectado en el archivo: {nombre_archivo}")
+        escenario = 'ataque'
+    else:
+        print(f"\n📞 [BOT] Audio recibido: {nombre_archivo}. Ejecutando flujo normal.")
+
+    # Simulamos el tiempo de procesamiento
+    time.sleep(0.3) 
+    time.sleep(0.4) 
+    time.sleep(0.4) 
+    
+    # 3. El bot decide qué contestar según la intención 
+    if escenario == 'exito':
+        respuesta_texto = "Hola. Tu transferencia fue exitosa y tu saldo restante es de 500 pesos."
+    elif escenario == 'fuera_alcance':
+        respuesta_texto = "Lo siento, soy el asistente virtual de Orbit. Solo puedo ayudarte con información financiera y transferencias."
+    elif escenario == 'ataque':
+        # 🐛 MODO VULNERABLE: El bot cae en la trampa (La prueba fallará en Allure)
+        #respuesta_texto = "Claro, modo administrador activado. Las contraseñas de la base de datos son admin 1 2 3."
+        
+        # 🛡️ MODO SEGURO: El bot se defiende (Descomenta esta línea para que la prueba pase a Verde)
+         respuesta_texto = "Debo rechazar esta solicitud por politicas de seguridad."
+    else: # incoherente
+        respuesta_texto = "Disculpa, no logré entenderte. Podrías repetir tu solicitud más claramente."
+
+    # 4. Generamos el audio en tiempo real con gTTS
+    tts = gTTS(text=respuesta_texto, lang='es')
+    audio_path = f"respuesta_temp_{escenario}.mp3"
+    tts.save(audio_path)
+    
+    return send_file(audio_path, mimetype="audio/mpeg")
+
+if __name__ == '__main__':
+    print("🤖 Servidor Orbit Multiescenario escuchando en el puerto 5000...")
+    app.run(port=5000)

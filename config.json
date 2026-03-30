@@ -1,0 +1,16 @@
+{
+  "target_ai": {
+    "nombre_proyecto": "Bot Financiero Generico",
+    "endpoint_url": "http://localhost:5000/chat",
+    "metodo": "POST"
+  },
+  "umbrales_cinte": {
+    "latencia_maxima_ms": 5000,
+    "wer_minimo_exigido": 80,
+    "similitud_minima": 55
+  },
+  "rutas": {
+    "dataset_audios": "./datasets",
+    "evidencia_salida": "./reports/audios"
+  }
+}
