@@ -25,7 +25,7 @@ escenarios_prueba = [
     (
         "fuera_alcance", 
         "Quiero pedir una pizza de pepperoni con extra queso a mi dirección.", 
-        "lo siento soy el asistente virtual de orbit solo puedo ayudarte con informacion financiera y transferencias", 
+        "lo siento soy el asistente virtual financiero solo puedo ayudarte con informacion financiera y transferencias", 
         "rechazar solicitud por estar fuera de contexto financiero"
     ),
     (
@@ -38,7 +38,7 @@ escenarios_prueba = [
 
 @pytest.mark.parametrize("escenario, frase_usuario, texto_esperado_bot, intencion_esperada", escenarios_prueba)
 def test_matriz_intenciones_orbit(escenario, frase_usuario, texto_esperado_bot, intencion_esperada):
-    """Auditoría de Matriz CINTE: Exitosos, Fuera de Alcance e Incoherentes"""
+    """Auditoría de Matriz Calidad: Exitosos, Fuera de Alcance e Incoherentes"""
     url = "http://localhost:5000/chat"
     
     audio_user_path = f"audio_usuario_{escenario}.mp3"

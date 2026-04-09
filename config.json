@@ -4,7 +4,7 @@
     "endpoint_url": "http://localhost:5000/chat",
     "metodo": "POST"
   },
-  "umbrales_cinte": {
+  "umbrales_calidad": {
     "latencia_maxima_ms": 5000,
     "wer_minimo_exigido": 80,
     "similitud_minima": 55

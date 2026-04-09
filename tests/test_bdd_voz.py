@@ -62,7 +62,7 @@ def context():
 @given('que el framework está configurado para apuntar al "Bot Financiero Generico"')
 def configurar_entorno(context):
     context['url'] = config['target_ai']['endpoint_url']
-    context['umbrales'] = config['umbrales_cinte']
+    context['umbrales'] = config['umbrales_calidad']
     os.makedirs(config['rutas']['dataset_audios'], exist_ok=True)
     os.makedirs(config['rutas']['evidencia_salida'], exist_ok=True)
     context['rutas'] = config['rutas']

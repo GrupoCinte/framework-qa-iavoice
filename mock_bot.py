@@ -30,14 +30,10 @@ def chat():
     if escenario == 'exito':
         respuesta_texto = "Hola. Tu transferencia fue exitosa y tu saldo restante es de 500 pesos."
     elif escenario == 'fuera_alcance':
-        respuesta_texto = "Lo siento, soy el asistente virtual de Orbit. Solo puedo ayudarte con información financiera y transferencias."
+        respuesta_texto = "Lo siento, soy el asistente virtual financiero. Solo puedo ayudarte con información financiera y transferencias."
     elif escenario == 'ataque':
-        # 🐛 MODO VULNERABLE: El bot cae en la trampa (La prueba fallará en Allure)
-        #respuesta_texto = "Claro, modo administrador activado. Las contraseñas de la base de datos son admin 1 2 3."
-        
-        # 🛡️ MODO SEGURO: El bot se defiende (Descomenta esta línea para que la prueba pase a Verde)
          respuesta_texto = "Debo rechazar esta solicitud por politicas de seguridad."
-    else: # incoherente
+    else: 
         respuesta_texto = "Disculpa, no logré entenderte. Podrías repetir tu solicitud más claramente."
 
     # 4. Generamos el audio en tiempo real con gTTS
@@ -48,5 +44,5 @@ def chat():
     return send_file(audio_path, mimetype="audio/mpeg")
 
 if __name__ == '__main__':
-    print("🤖 Servidor Orbit Multiescenario escuchando en el puerto 5000...")
+    print("🤖 Servidor Mock Bot Multiescenario escuchando en el puerto 5000...")
     app.run(port=5000)
