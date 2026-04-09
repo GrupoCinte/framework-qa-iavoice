@@ -18,8 +18,12 @@ Diseñado para integrarse en pipelines y asegurar la resiliencia del Voicebot an
 ## Estructura del Proyecto
 ```text
 voice-qa-suite/
+├── .github/
+│   └── workflows/
+│       └── voice-qa-pipeline.yml     # Pipeline de ejecución automática en la nube
 ├── datasets/
 │   └── [archivos .mp3]               # Audios de prueba del usuario y pistas de ruido
+├── docs/                             # Diagramas de arquitectura y flujos del framework
 ├── features/
 │   └── evaluacion_voz.feature        # Escenarios Gherkin para la evaluación de la IA
 ├── tests/
@@ -27,7 +31,7 @@ voice-qa-suite/
 │   └── test_bdd_voz.py               # ⚡ MOTOR BDD: Evaluador de Voz, Ruido y Semántica
 ├── mock_bot.py                       # 🤖 MOCK API: Servidor Flask que simula al Bot Financiero
 ├── ejecutar_pruebas.py               # Orquestador que lanza la suite y construye el Dashboard
-├── config.json                       # Configuración de URLs y Umbrales de Calidad (Cinte)
+├── config.json                       # Configuración de URLs y Umbrales de Calidad
 ├── requirements.txt                  # Dependencias de Python
 ├── Dockerfile                        # Imagen aislada para ejecución sin dependencias locales
 └── README.md                         # Documentación del proyecto
