@@ -59,8 +59,8 @@ jobs:
           pytest tests/test_bdd_voz.py -v -s --alluredir=allure-results --cov=. --cov-report=xml
         continue-on-error: true
 
-      - name: 📊 Escáner de SonarCloud (Sin Warnings)
-        uses: SonarSource/sonarcloud-github-action@master
+      - name: 📊 Escáner de SonarCloud 
+        uses: SonarSource/sonarqube-scan-action@v5.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
