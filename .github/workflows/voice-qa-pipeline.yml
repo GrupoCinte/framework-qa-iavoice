@@ -33,7 +33,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install sentence-transformers pydub pytest pytest-bdd allure-pytest requests gTTS
+          pip install sentence-transformers pydub pytest pytest-bdd allure-pytest requests gTTS pytest-cov
 
       - name: 🤖 Levantar el Mock Bot en segundo plano
         run: |
@@ -52,7 +52,7 @@ jobs:
           echo "--------------------------------------------------------"
           
           echo -e "\n⚙️ EJECUTANDO PRUEBAS..."
-          pytest tests/test_bdd_voz.py -v -s --alluredir=allure-results
+          pytest tests/test_bdd_voz.py -v -s --alluredir=allure-results --cov=. --cov-report=xml
         continue-on-error: true
 
       - name: 📊 Guardar Resultados de Allure (Artefacto)
