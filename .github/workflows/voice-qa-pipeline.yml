@@ -1,8 +1,9 @@
 name: Auditoria IA - Voice Framework
 
+# 1. ¿Cuándo se ejecuta?
 on:
   push:
-    branches: 
+    branches:
       - "main"
       - "feature/*"
   pull_request:
@@ -14,39 +15,49 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: 📥 Clonar el repositorio
-      uses: actions/checkout@v4
+      - name: 📥 Clonar el repositorio
+        uses: actions/checkout@v4
 
-    - name: 🐍 Configurar Python 3.12
-      uses: actions/setup-python@v5
-      with:
-        python-version: "3.12"
-        cache: 'pip'
+      - name: 🐍 Configurar Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: 'pip'
 
-    - name: ⚙️ Instalar FFmpeg (Requisito del Sistema)
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y ffmpeg
+      - name: ⚙️ Instalar FFmpeg (Requisito del Sistema)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
 
-    - name: 📦 Instalar Dependencias de Python
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install sentence-transformers pydub pytest pytest-bdd allure-pytest requests gTTS
+      - name: 📦 Instalar Dependencias de Python
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install sentence-transformers pydub pytest pytest-bdd allure-pytest requests gTTS
 
-    - name: 🤖 Levantar el Mock Bot en segundo plano
-      run: |
-        python mock_bot.py &
-        sleep 5 
+      - name: 🤖 Levantar el Mock Bot en segundo plano
+        run: |
+          python mock_bot.py &
+          sleep 5 
 
-    - name: 🧪 Ejecutar Auditoría BDD
-      run: |
-        pytest tests/test_bdd_voz.py --alluredir=allure-results
-      continue-on-error: true 
+      - name: 🧪 Ejecutar Auditoría BDD
+        run: |
+          echo "========================================================"
+          echo "🚀 INICIANDO AUDITORÍA PARA LA RAMA: ${{ github.ref_name }}"
+          echo "========================================================"
+          
+          echo -e "\n📖 LEYENDO ESCENARIOS GHERKIN (BUSINESS RULES):"
+          echo "--------------------------------------------------------"
+          cat features/evaluacion_voz.feature
+          echo "--------------------------------------------------------"
+          
+          echo -e "\n⚙️ EJECUTANDO PRUEBAS..."
+          pytest tests/test_bdd_voz.py -v -s --alluredir=allure-results
+        continue-on-error: true
 
-    - name: 📊 Guardar Resultados de Allure (Artefacto)
-      uses: actions/upload-artifact@v4
-      with:
-        name: allure-results
-        path: allure-results
-        retention-days: 7
+      - name: 📊 Guardar Resultados de Allure (Artefacto)
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results
+          path: allure-results
+          retention-days: 7
