@@ -7,23 +7,22 @@ El framework opera aislando el Sistema Bajo Prueba (SUT) e interactuando con mú
 
 ### 1. Diagrama de Contexto
 El siguiente diagrama ilustra el ecosistema completo donde opera el framework. El Analista de QA interactúa como el orquestador que prepara los datasets y niveles de ruido, mientras que el Framework (Voice-QA) actúa como el núcleo que consume servicios de IA externos (Whisper, Llama 3, SpeechMOS) para entregar un tablero de resultados detallado al Cliente final.
-   
-![Diagrama de Contexto](docs/Diagrama%20de%20Contexto.drawio.jpg)
+![Diagrama de Contexto](docs/Diagrama%20de%20Contexto.drawio.png)
 
 ### 2. Arquitectura de Componentes (C4)
 Internamente, el sistema se divide en módulos especializados. El Procesador de Audio se encarga del data augmentation (overlay de ruido), mientras que el Cliente HTTP gestiona la comunicación con el Sistema Bajo Prueba (SUT). El componente crítico es la Calculadora de Score Triádico, que consolida las métricas de los tres ejes de evaluación para generar una calificación única de precisión.
-![Diagrama de Componentes C4](docs/Diagrama%20de%20componentesC4.drawio.jpg)
+![Diagrama de Componentes C4](docs/Diagrama%20de%20componentesC4.drawio.png)
 
 ### 3. Flujo de Trabajo (Pipeline QA)
 El proceso comienza con la preparación del dataset. Mediante scripts de automatización, se toman audios limpios y se les inyecta ruido de fondo (estrés) para simular entornos reales. Estos audios "estresados" son los que finalmente se envían al Bot para evaluar su resiliencia.
-![Diagrama de Flujo](docs/Diagrama%20de%20Flujo.drawio.jpg)
+![Diagrama de Flujo de Datos](docs/Diagrama%20de%20Flujo.drawio.png)
 
 ## ⚡ La Evaluación Triádica: El Corazón del Framework
 El diferencial de este framework es su capacidad de evaluar la respuesta de la IA desde tres perspectivas simultáneas y asíncronas, como se observa en el diagrama de secuencia a continuación:
 1. Eje de Consistencia (STT): Utiliza OpenAI Whisper para transcribir la respuesta de audio del bot. Mediante el algoritmo JIWER, se calcula el Word Error Rate (WER), determinando si el bot tiene una "dicción" clara y si las palabras emitidas coinciden con el guion esperado.
 2. Eje Cognitivo (LLM Judge): La transcripción se envía a Llama 3 (vía Groq API). Este motor actúa como un juez inteligente que evalúa si, más allá de las palabras exactas, la intención semántica de la respuesta cumple con los objetivos de negocio y seguridad.
 3. Eje Acústico (MOS): Se emplea SpeechMOS para analizar las propiedades físicas del audio generado por el bot, otorgando un puntaje de naturalidad (Mean Opinion Score). Esto asegura que el bot no suene excesivamente robótico o con artefactos de audio molestos.
-![Secuencia de Ejecución](docs/Diagrama%20de%20Secuencia%203.drawio.jpg)
+   ![Diagrama de Secuencia de Evaluación](docs/Diagrama%20de%20Secuencia%203.drawio.png)
 ## Tech Stack
 
 * **Lenguaje:** Python 3.12
