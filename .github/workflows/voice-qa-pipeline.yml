@@ -1,10 +1,9 @@
 name: Auditoria IA - Voice Framework
 
-# 1. ¿Cuándo se ejecuta?
 on:
   push:
     branches:
-      - "main"
+      - "develop"
   pull_request:
     branches: 
       - "main"
@@ -19,7 +18,7 @@ jobs:
       - name: 📥 Clonar el repositorio
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Requerido por SonarCloud para analizar historial
+          fetch-depth: 0  
 
       - name: 🐍 Configurar Python 3.12
         uses: actions/setup-python@v5
@@ -36,7 +35,6 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install sentence-transformers pydub pytest pytest-bdd allure-pytest requests gTTS pytest-cov
 
       - name: 🤖 Levantar el Mock Bot en segundo plano
         run: |
