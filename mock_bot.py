@@ -1,11 +1,17 @@
 from flask import Flask, send_file, request
+from flask_wtf.csrf import CSRFProtect
 from gtts import gTTS
 import time
 import os
 
 app = Flask(__name__)
 
+# 🛡️ LÓGICA DE SEGURIDAD: Configuramos la protección CSRF exigida por SonarCloud
+app.config['SECRET_KEY'] = 'super-secreto-qa-framework-2026'
+csrf = CSRFProtect(app)
+
 @app.route('/chat', methods=['POST'])
+@csrf.exempt # Declaramos explícitamente que es una API sin estado (stateless) para Pytest
 def chat():
     # 1. Obtenemos el archivo de audio enviado por Pytest
     audio_file = request.files.get('audio')
