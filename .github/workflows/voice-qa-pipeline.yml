@@ -69,6 +69,7 @@ jobs:
             -Dsonar.python.version=3.12
             -Dsonar.python.coverage.reportPaths=coverage.xml
             -Dsonar.exclusions=datasets/**,docs/**,allure-results/**,venv/**,**/*.md,**/*.json
+            -Dsonar.coverage.exclusions=mock_bot.py
 
       - name: 📈 Guardar Resultados de Allure (Artefacto)
         uses: actions/upload-artifact@v4
