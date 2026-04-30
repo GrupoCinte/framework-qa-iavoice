@@ -6,8 +6,7 @@ import os
 
 app = Flask(__name__)
 
-# 🛡️ LÓGICA DE SEGURIDAD: Configuramos la protección CSRF exigida por SonarCloud
-app.config['SECRET_KEY'] = 'super-secreto-qa-framework-2026'
+app.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET_KEY', os.urandom(24))
 csrf = CSRFProtect(app)
 
 @app.route('/chat', methods=['POST'])
