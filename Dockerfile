@@ -1,18 +1,15 @@
 FROM python:3.12-slim
 
-RUN apt-get update && apt-get install -y ffmpeg && rm -rf /var/lib/apt/lists/*
-
-
-RUN useradd -m qauser
+RUN apt-get update && apt-get install -y ffmpeg && rm -rf /var/lib/apt/lists/* \
+    && useradd -m qauser
 
 WORKDIR /app
 
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+RUN pip install --no-cache-dir --only-binary :all: --no-binary openai-whisper -r requirements.txt
 
-RUN chown -R qauser:qauser /app
+COPY --chown=qauser:qauser . .
 
 USER qauser
 
