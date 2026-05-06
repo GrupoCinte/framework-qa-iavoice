@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install -y ffmpeg && rm -rf /var/lib/apt/lists/* \
 WORKDIR /app
 
 # Instalar pipenv
-RUN pip install --no-cache-dir pipenv
+RUN pip install --no-cache-dir --only-binary :all: pipenv
 
 COPY Pipfile Pipfile.lock ./
 
