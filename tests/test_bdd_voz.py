@@ -92,7 +92,7 @@ def cargar_audio_real(context, archivo_audio):
     context['ruta_audio_usuario'] = ruta_audio
     allure.attach.file(ruta_audio, name="1. Audio Original del Usuario", attachment_type="audio/mpeg", extension="mp3")
 
-# 🚀 NUEVO PASO: LA MEZCLADORA DE AUDIO
+# MEZCLADORA DE AUDIO
 @given(parsers.parse('le inyecto ruido de fondo "{archivo_ruido}" a "{db_diferencia}" decibelios'))
 def inyectar_ruido_dinamico(context, archivo_ruido, db_diferencia):
     ruta_limpio = context['ruta_audio_usuario']
@@ -108,7 +108,7 @@ def inyectar_ruido_dinamico(context, archivo_ruido, db_diferencia):
         # 2. Ajustar el volumen del ruido
         ruido = ruido + int(db_diferencia)
         
-        # 3. Igualar duraciones (repetir ruido si es corto, cortar si es largo)
+        # 3. Igualar duraciones 
         if len(ruido) < len(audio_base):
             ruido = ruido * (len(audio_base) // len(ruido) + 1)
         ruido = ruido[:len(audio_base)] 
@@ -120,7 +120,7 @@ def inyectar_ruido_dinamico(context, archivo_ruido, db_diferencia):
         nueva_ruta = os.path.join(context['rutas']['evidencia_salida'], "audio_mezclado_temp.mp3")
         audio_mezclado.export(nueva_ruta, format="mp3")
         
-        # 6. ENGAÑAR AL FRAMEWORK: decirle que el archivo a enviar ahora es el mezclado
+        # 6. Decirle que el archivo a enviar ahora es el mezclado
         context['ruta_audio_usuario'] = nueva_ruta
         
         # Adjuntar al reporte para poder escucharlo

@@ -9,7 +9,6 @@ from sentence_transformers import SentenceTransformer, util
 
 warnings.filterwarnings("ignore")
 
-# 🧠 Cargamos la IA una sola vez para que las pruebas corran rápido
 print("Cargando modelos de IA, por favor espera...")
 model_whisper = whisper.load_model("base")
 model_similitud = SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')
