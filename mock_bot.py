@@ -6,7 +6,8 @@ import os
 
 app = Flask(__name__)
 
-app.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET_KEY', os.urandom(24)) # NOSONARcsrf = CSRFProtect(app)
+app.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET_KEY', os.urandom(24)) # NOSONAR
+csrf = CSRFProtect(app)
 
 @app.route('/chat', methods=['POST'])
 @csrf.exempt # Declaramos explícitamente que es una API sin estado (stateless) para Pytest
