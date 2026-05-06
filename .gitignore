@@ -1,14 +1,24 @@
-# Entornos virtuales y caché de Python
 venv/
+env/
+
 __pycache__/
+*.pyc
+*.pyo
 .pytest_cache/
 
-# Reportes y resultados de pruebas
+.idea/
+.vscode/
+
+allure/
 allure-report/
 allure-results/
 reports/
 *.html
 
-# Archivos multimedia temporales y binarios
 *.mp3
-ffmpeg.exe
+*.wav
+
+*.exe
+
+# Logs
+*.log

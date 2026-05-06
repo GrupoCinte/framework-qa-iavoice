@@ -31,10 +31,11 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y ffmpeg
 
-      - name: 📦 Instalar Dependencias de Python
+      - name: 📦 Instalar Dependencias con Pipenv
         run: |
           python -m pip install --upgrade pip
-          pip install --only-binary :all: --no-binary openai-whisper -r requirements.txt
+          pip install pipenv
+          pipenv install --system --deploy
 
       - name: 🤖 Levantar el Mock Bot en segundo plano
         run: |
@@ -46,13 +47,6 @@ jobs:
           echo "========================================================"
           echo "🚀 INICIANDO AUDITORÍA PARA LA RAMA: ${{ github.ref_name }}"
           echo "========================================================"
-          
-          echo -e "\n📖 LEYENDO ESCENARIOS GHERKIN (BUSINESS RULES):"
-          echo "--------------------------------------------------------"
-          cat features/evaluacion_voz.feature
-          echo "--------------------------------------------------------"
-          
-          echo -e "\n⚙️ EJECUTANDO PRUEBAS..."
           pytest tests/test_bdd_voz.py -v -s --alluredir=allure-results --cov=. --cov-report=xml
         continue-on-error: true
 
