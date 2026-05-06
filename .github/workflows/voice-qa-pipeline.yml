@@ -67,7 +67,7 @@ jobs:
             -Dsonar.projectKey=GrupoCinte_framework-qa-iavoice
             -Dsonar.python.version=3.12
             -Dsonar.python.coverage.reportPaths=coverage.xml
-            -Dsonar.exclusions=datasets/**,docs/**,allure-results/**,venv/**,**/*.md,**/*.json
+            -Dsonar.exclusions=datasets/**,docs/**,allure-results/**,allure/**,venv/**,**/*.md,**/*.json,**/*.js,**/*.ts,**/*.css,**/*.html
             -Dsonar.coverage.exclusions=mock_bot.py
 
       - name: 📈 Guardar Resultados de Allure (Artefacto)
