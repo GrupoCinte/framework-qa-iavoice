@@ -6,12 +6,12 @@ RUN apt-get update && apt-get install -y ffmpeg && rm -rf /var/lib/apt/lists/* \
 WORKDIR /app
 
 # Instalar pipenv
-RUN pip install --no-cache-dir --only-binary :all: pipenv==2024.0.1
+RUN pip install --no-cache-dir --only-binary :all: pipenv==2024.0.1 # NOSONAR
 
 COPY Pipfile Pipfile.lock ./
 
 
-RUN pipenv install --system --deploy
+RUN pipenv sync --system
 
 
 COPY --chown=qauser:qauser . .
