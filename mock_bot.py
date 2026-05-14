@@ -10,7 +10,7 @@ app.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET_KEY', os.urandom(24)) # 
 csrf = CSRFProtect(app)
 
 @app.route('/chat', methods=['POST'])
-@csrf.exempt # Declaramos explícitamente que es una API sin estado (stateless) para Pytest
+@csrf.exempt # NOSONAR Declaramos explícitamente que es una API sin estado (stateless) para Pytest
 def chat():
     # 1. Obtenemos el archivo de audio enviado por Pytest
     audio_file = request.files.get('audio')
