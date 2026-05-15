@@ -3,6 +3,7 @@ name: Auditoria IA - Voice Framework
 on:
   push:
     branches:
+      - "main"
       - "develop"
   pull_request:
     branches: 
