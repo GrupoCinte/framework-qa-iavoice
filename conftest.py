@@ -9,7 +9,6 @@ def pytest_runtest_makereport(item, call):
     extras_list = getattr(report, "extras", [])
     
     if report.when == "call":
-        # Extraer el escenario del nombre de la prueba 
         match = re.search(r'\[(.*?)\]', item.name)
         escenario = match.group(1) if match else "exito"
         

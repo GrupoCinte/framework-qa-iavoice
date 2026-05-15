@@ -1,18 +1,30 @@
-# 1. Usamos un sistema operativo Linux muy ligero con Python 3.12 preinstalado
 FROM python:3.12-slim
 
-# 2. Instalamos la librería del sistema 'ffmpeg' (Obligatoria para que Whisper escuche MP3)
-RUN apt-get update && apt-get install -y ffmpeg
+RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg && rm -rf /var/lib/apt/lists/* \
+    && useradd -m qauser
 
-# 3. Creamos la carpeta /app dentro del contenedor y nos movemos ahí
 WORKDIR /app
 
-# 4. Copiamos nuestro archivo de requerimientos e instalamos las librerías de IA y QA
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN python -c \
+    "import subprocess; subprocess.run([ \
+    'pip', 'install', '--no-cache-dir', \
+    '--only-binary', ':all:', 'pipenv==2024.0.1' \
+    ], check=True)"
 
-# 5. Copiamos el resto de nuestro framework (código, audios, features)
-COPY . .
+COPY Pipfile Pipfile.lock ./
 
-# 6. El comando maestro que se ejecutará cuando el contenedor se encienda
+
+RUN pipenv sync --system
+
+
+COPY tests/ tests/
+COPY features/ features/
+COPY datasets/ datasets/
+COPY *.py config.json ./
+
+RUN mkdir -p allure-results && chown -R qauser:qauser /app
+
+USER qauser
+
+
 CMD ["pytest", "tests/test_bdd_voz.py", "--alluredir=allure-results"]

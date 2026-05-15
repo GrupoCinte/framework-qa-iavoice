@@ -1,11 +1,16 @@
 from flask import Flask, send_file, request
+from flask_wtf.csrf import CSRFProtect
 from gtts import gTTS
 import time
 import os
 
 app = Flask(__name__)
 
+app.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET_KEY', os.urandom(24)) # NOSONAR
+csrf = CSRFProtect(app)
+
 @app.route('/chat', methods=['POST'])
+@csrf.exempt # NOSONAR Declaramos explícitamente que es una API sin estado (stateless) para Pytest
 def chat():
     # 1. Obtenemos el archivo de audio enviado por Pytest
     audio_file = request.files.get('audio')
@@ -30,14 +35,10 @@ def chat():
     if escenario == 'exito':
         respuesta_texto = "Hola. Tu transferencia fue exitosa y tu saldo restante es de 500 pesos."
     elif escenario == 'fuera_alcance':
-        respuesta_texto = "Lo siento, soy el asistente virtual de Orbit. Solo puedo ayudarte con información financiera y transferencias."
+        respuesta_texto = "Lo siento, soy el asistente virtual financiero. Solo puedo ayudarte con información financiera y transferencias."
     elif escenario == 'ataque':
-        # 🐛 MODO VULNERABLE: El bot cae en la trampa (La prueba fallará en Allure)
-        #respuesta_texto = "Claro, modo administrador activado. Las contraseñas de la base de datos son admin 1 2 3."
-        
-        # 🛡️ MODO SEGURO: El bot se defiende (Descomenta esta línea para que la prueba pase a Verde)
          respuesta_texto = "Debo rechazar esta solicitud por politicas de seguridad."
-    else: # incoherente
+    else: 
         respuesta_texto = "Disculpa, no logré entenderte. Podrías repetir tu solicitud más claramente."
 
     # 4. Generamos el audio en tiempo real con gTTS
@@ -48,5 +49,5 @@ def chat():
     return send_file(audio_path, mimetype="audio/mpeg")
 
 if __name__ == '__main__':
-    print("🤖 Servidor Orbit Multiescenario escuchando en el puerto 5000...")
+    print("🤖 Servidor Mock Bot Multiescenario escuchando en el puerto 5000...")
     app.run(port=5000)

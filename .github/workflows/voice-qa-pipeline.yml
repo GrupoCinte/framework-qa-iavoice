@@ -1,0 +1,85 @@
+name: Auditoria IA - Voice Framework
+
+on:
+  push:
+    branches:
+      - "develop"
+  pull_request:
+    branches: 
+      - "main"
+      - "develop"
+  workflow_dispatch:
+
+jobs:
+  test-ai:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Clonar el repositorio
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          fetch-depth: 0
+
+      - name: 🐍 Configurar Python 3.12
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+          cache: 'pipenv'
+
+      - name: ⚙️ Instalar FFmpeg (Requisito del Sistema)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+
+      - name: 📦 Instalar Dependencias con Pipenv
+        run: |
+          python -c "import subprocess; subprocess.run(['pipx', 'install', 'pipenv'], check=True)"
+          pipenv sync --system
+
+      - name: 🤖 Levantar el Mock Bot en segundo plano
+        run: |
+          python mock_bot.py &
+          sleep 5 
+
+      - name: 🧪 Ejecutar Auditoría BDD y Medir Cobertura
+        run: |
+          echo "========================================================"
+          echo "🚀 INICIANDO AUDITORÍA PARA LA RAMA: ${{ github.ref_name }}"
+          echo "========================================================"
+          pytest tests/test_bdd_voz.py -v -s --alluredir=allure-results --cov=. --cov-report=xml
+        continue-on-error: true
+
+      - name: 📊 Escáner de SonarCloud 
+        uses: SonarSource/sonarcloud-github-action@5bd1db64534962caf02c4e376fd959a46afd86d9 # v2.1.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.organization=grupocinte
+            -Dsonar.projectKey=GrupoCinte_framework-qa-iavoice
+            -Dsonar.python.version=3.12
+            -Dsonar.python.coverage.reportPaths=coverage.xml
+            -Dsonar.exclusions=datasets/**,docs/**,allure-results/**,allure/**,venv/**,**/*.md,**/*.json,**/*.js,**/*.ts,**/*.css,**/*.html
+            -Dsonar.coverage.exclusions=**/*.py
+
+      - name: 📈 Guardar Resultados Crudos de Allure
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: allure-results-raw
+          path: allure-results
+          retention-days: 7
+
+      - name: 📊 Generar Reporte Allure HTML
+        if: always()
+        run: |
+          python -c "import subprocess; subprocess.run(['npx', '--yes', 'allure-commandline', 'generate', 'allure-results', '-o', 'allure-report', '--clean'], check=True)"
+
+      - name: 🚀 Descargar Artefacto HTML de Allure
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: allure-report-html
+          path: allure-report
+          retention-days: 7
